@@ -1,0 +1,9 @@
+{
+  "name": "Codename Starveil",
+  "description": "Bunny's Fifth Generation Avatar",
+  "authors": [
+    "TheKillerBunny"
+  ],
+  "color": "#5865f2",
+  "autoScripts": [ "load" ]
+}
