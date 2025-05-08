@@ -734,7 +734,6 @@
 				{
 					"name": "LeftLeg",
 					"origin": [-1.9, 12, 0],
-					"rotation": [-180, 0, 0],
 					"color": 0,
 					"uuid": "02a52237-2932-8788-9e11-cef82572d3e6",
 					"export": true,
@@ -743,7 +742,7 @@
 					"locked": false,
 					"visibility": true,
 					"autouv": 0,
-					"selected": true,
+					"selected": false,
 					"children": [
 						"f73afbce-1b07-957a-dfdc-c8ceb397e808",
 						{
@@ -823,12 +822,11 @@
 				{
 					"name": "RightLeg",
 					"origin": [1.9, 12, 0],
-					"rotation": [-180, 0, 0],
 					"color": 0,
 					"uuid": "8352f6b0-460c-0f32-f558-00b1ad7435f8",
 					"export": true,
 					"mirror_uv": false,
-					"isOpen": true,
+					"isOpen": false,
 					"locked": false,
 					"visibility": true,
 					"autouv": 0,
@@ -881,17 +879,16 @@
 				},
 				{
 					"name": "RightArm",
-					"origin": [6, 22, 0],
-					"rotation": [-180, 0, 0],
+					"origin": [4, 22, 0],
 					"color": 0,
 					"uuid": "a0a8f07d-1ea9-e2fd-f912-17ca92989d0c",
 					"export": true,
 					"mirror_uv": false,
-					"isOpen": true,
+					"isOpen": false,
 					"locked": false,
 					"visibility": true,
 					"autouv": 0,
-					"selected": false,
+					"selected": true,
 					"children": [
 						"fd987e0c-f0bb-69b6-b5dc-c02d11a03f36",
 						{
@@ -954,13 +951,12 @@
 				},
 				{
 					"name": "LeftArm",
-					"origin": [-6, 22, 0],
-					"rotation": [-180, 0, 0],
+					"origin": [-4, 22, 0],
 					"color": 0,
 					"uuid": "93a06899-cd39-7b40-cdf4-0594440e472c",
 					"export": true,
 					"mirror_uv": false,
-					"isOpen": true,
+					"isOpen": false,
 					"locked": false,
 					"visibility": true,
 					"autouv": 0,

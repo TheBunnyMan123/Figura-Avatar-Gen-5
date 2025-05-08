@@ -96,3 +96,5 @@ function events.TICK()
    customEvents.tick:fire(tick)
 end
 
+events = setmetatable({}, eventsMetatable)
+
