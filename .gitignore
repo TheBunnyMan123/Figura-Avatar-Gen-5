@@ -1,4 +1,3 @@
-libs/**
-libs/TheKillerBunny/BunnyUI/**
+libs/TheKillerBunny/BunnySignLib.lua
 .vscode
 .luarc.json

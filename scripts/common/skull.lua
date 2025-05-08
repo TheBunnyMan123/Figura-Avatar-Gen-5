@@ -23,7 +23,7 @@ local function deepCopy(model, name)
   return part
 end
 
-local model = deepCopy(models.model.root, "Skull"):setParentType("SKULL"):setScale(0.3):setPos(0, -3, 0)
+local model = deepCopy(models.models.model.root, "Skull"):setParentType("SKULL"):setScale(0.3):setPos(0, -3, 0)
 
 local function setParentTypeRec(model, tpe)
   for _, v in pairs(model:getChildren()) do
@@ -40,9 +40,9 @@ model.RightLeg:setRot(90, -13, 0)
 model.LeftArm:setRot(13, 0)
 model.RightArm:setRot(13, 0)
 
-models:addChild(model)
+models.models:addChild(model)
 
-local taskHolder = models:newPart("TKBunny$TaskHolderModels", "SKULL")
+local taskHolder = models.models:newPart("TKBunny$TaskHolderModels", "SKULL")
 taskHolder:newPart("camera", "CAMERA")
 
 local function compileVec(str)
@@ -272,7 +272,7 @@ local modes = {
 
 function events.SKULL_RENDER(delta, block, item, entity)
   model:setVisible(true)
-  models.halo.Skull:setVisible(false):setSecondaryRenderType("EMISSIVE_SOLID"):setSecondaryTexture("CUSTOM", textures["models.halo.halo"])
+  models.models.halo.Skull:setVisible(false):setSecondaryRenderType("EMISSIVE_SOLID"):setSecondaryTexture("CUSTOM", textures["models.halo.halo"])
   
   for _, v in pairs(tasks) do v:remove() end
   tasks = {}
@@ -286,21 +286,21 @@ function events.SKULL_RENDER(delta, block, item, entity)
 
     if not succ then col = vec(1, 1, 0.2) end
 
-    for _, v in pairs(models.halo.Skull:getChildren()) do
+    for _, v in pairs(models.models.halo.Skull:getChildren()) do
       v:setColor(col)
     end
     
     local halo = item:getName() == "halo"
     model:setVisible(not halo)
-    models.halo.Skull:setVisible(halo)
+    models.models.halo.Skull:setVisible(halo)
 
     return
   elseif item then
     local halo = item:getName() == "halo"
     model:setVisible(not halo)
-    models.halo.Skull:setVisible(halo)
+    models.models.halo.Skull:setVisible(halo)
     
-    for _, v in pairs(models.halo.Skull:getChildren()) do
+    for _, v in pairs(models.models.halo.Skull:getChildren()) do
       v:setColor(1, 1, 0.2)
     end
 
