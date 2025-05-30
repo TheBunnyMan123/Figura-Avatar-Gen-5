@@ -21,7 +21,7 @@ function pings.parkour_particles(type, pos, intensity)
 
          pcall(function()
             particles:newParticle("minecraft:block " ..
-               world.getBlockState(pos - vec(0, 1, 0)):getID(), pos, vel):setVelocity(vel * intensity / 3)
+               world.getBlockState(pos - vec(0, 0.1, 0)):getID(), pos, vel):setVelocity(vel * intensity / 3)
          end)
       end
    elseif type == "cloud" then
