@@ -50,7 +50,9 @@ function events.WORLD_TICK()
       else
          newBallPos = vec(4, 4)
       end
-   elseif newBallPos.y <= 0 then
+   end
+
+   if newBallPos.y <= 0 then
       ballDir.y = 0.2
    elseif newBallPos.y >= 7 then
       ballDir.y = -0.2
