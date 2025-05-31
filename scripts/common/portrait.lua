@@ -67,13 +67,13 @@ function events.WORLD_TICK()
    local dirX = ballDir.x
    local ballX = ballPos.x
 
-   if relativeLeftPaddlePos < 1.5 and dirX < 0 and ballX < 4 then
+   if relativeLeftPaddlePos < 1.5 and dirX < 0 and ballX < 3.5 then
       leftPaddlePos.y = math.clamp(leftPaddlePos.y - 0.3, 0, 6)
    elseif relativeLeftPaddlePos > 1.5 and dirX < 0 and ballX < 4 then
       leftPaddlePos.y = math.clamp(leftPaddlePos.y + 0.3, 0, 6)
    end
 
-   if relativeRightPaddlePos < 1.5 and dirX > 0 and ballX > 3 then
+   if relativeRightPaddlePos < 1.5 and dirX > 0 and ballX > 3.5 then
       rightPaddlePos.y = math.clamp(rightPaddlePos.y - 0.3, 0, 6)
    elseif relativeRightPaddlePos > 1.5 and dirX > 0 and ballX > 3 then
       rightPaddlePos.y = math.clamp(rightPaddlePos.y + 0.3, 0, 6)
