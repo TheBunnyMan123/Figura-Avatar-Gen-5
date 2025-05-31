@@ -19,7 +19,7 @@ local sprint = keybinds:fromVanilla("key.sprint");
 
 local longjumping = false
 local slamming = false
-local jumps = 4
+local jumps = 2
 
 space:setOnPress(function()
    if not allowed() then return end
@@ -61,7 +61,7 @@ function events.TICK()
    if not allowed() then return end
 
    if player:isOnGround() then
-      jumps = 4
+      jumps = 2
       longjumping = false
    end
 
