@@ -6,21 +6,25 @@ local background = part:newSprite("background")
    :setColor(0, 0, 0)
    :setSize(16, 16)
    :setPos(4, 8)
+   :setLight(15)
 
 local ball = part:newSprite("ball")
    :setTexture(white, 1, 1)
    :setSize(1, 1)
    :setPos(4, 8, -1)
+   :setLight(15)
 
 local leftPaddle = part:newSprite("leftPaddle")
    :setTexture(white, 1, 1)
    :setSize(1, 3)
    :setPos(4, 8, -1)
+   :setLight(15)
 
 local rightPaddle = part:newSprite("rightPaddle")
    :setTexture(white, 1, 1)
    :setSize(1, 3)
    :setPos(-3, 8, -1)
+   :setLight(15)
 
 local topLeft = vec(4, 8)
 
