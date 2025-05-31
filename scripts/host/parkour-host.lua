@@ -5,7 +5,7 @@ local function particles(type, pos, intensity)
 end
 
 local function allowed()
-   if player:getPermissionLevel() > 1 then
+   if player:isLoaded() and player:getPermissionLevel() > 1 then
       return true
    elseif client.getServerData().ip == "plaza.figuramc.org" then
       return true
@@ -46,6 +46,8 @@ space:setOnPress(function()
 end)
 
 shift:setOnPress(function()
+   if not allowed() then return end
+
    if not host:isFlying() and player:getVelocity().y > -2 and not longjumping and not player:getVehicle() and not player:isOnGround() and not player:isGliding() and not space:isPressed() then
       goofy:setVelocity(player:getVelocity().x_z:add(0, -2, 0))
       slamming = -0.5
