@@ -19,7 +19,7 @@ local sprint = keybinds:fromVanilla("key.sprint");
 
 local longjumping = false
 local slamming = false
-local jumps = 3
+local jumps = 4
 
 space:setOnPress(function()
    if not allowed() then return end
@@ -36,6 +36,7 @@ space:setOnPress(function()
    elseif player:isOnGround() and not longjumping and shift:isPressed() then
       goofy:setVelocity(player:getLookDir().x_z:normalize() * 1.5 + vec(0, 0.5, 0))
       longjumping = true
+      jumps = jumps - 1
       
       particles("gust", player:getPos())
 
@@ -60,7 +61,7 @@ function events.TICK()
    if not allowed() then return end
 
    if player:isOnGround() then
-      jumps = 3
+      jumps = 4
       longjumping = false
    end
 
