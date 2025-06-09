@@ -67,8 +67,6 @@ function events.TICK()
 
    if player:getVelocity().y <= -1 then
       slamming = player:getVelocity().y
-   elseif slamming and player:getVelocity().y > -2 then
-      goofy:setVelocity(player:getVelocity().x_z:add(0, -2, 0))
    end
 
    if slamming then
