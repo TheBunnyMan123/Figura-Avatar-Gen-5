@@ -35,9 +35,9 @@ function textbox.new(pos, width, z_index)
 
    new.events = eventlib.newEvents()
    new.events.CLICK = eventlib.newEvent()
-   new.children = {}
-   new.parentPos = vec(0, 0)
    new.label = label.new(vec(2, 2), z_index + 10, "")
+   new.children = {new.label}
+   new.parentPos = vec(0, 0)
    new.text = ""
 
    new.label:setWidth(width / 0.68):setWrap(false)
@@ -133,10 +133,7 @@ function events.KEY_PRESS(key, state)
                textToSet = textToSet:gsub("^.", "")
             end
 
-            v.label:text(toJson {
-               text = textToSet,
-               color = "black"
-            })
+            v.label:text(textToSet)
          end
       end
    end
@@ -156,10 +153,7 @@ function events.CHAR_TYPED(char)
             textToSet = textToSet:gsub("^.", "")
          end
 
-         v.label:text(toJson {
-            text = textToSet,
-            color = "black"
-         })
+         v.label:text(textToSet)
       end
    end
 end

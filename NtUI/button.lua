@@ -2,6 +2,7 @@ local buttons = {}
 local drawable = require("NtUI.drawable")
 local eventlib = require("libs.TheKillerBunny.BunnyEventLib")
 local nineslice = require("NtUI.nineslice")
+local label = require("NtUI.label")
 
 local click = keybinds:newKeybind("Click", "key.mouse.left", true)
 
@@ -14,9 +15,10 @@ local texture = textures["NtUI.theme"]
 ---@field events {PRESSED: Event}
 ---@field nineslice NtUI.Nineslice
 ---@field children NtUI.Drawable[]
+---@field label NtUI.Label
 local button = {}
 
-function button.new(pos, size, z_index)
+function button.new(pos, width, z_index, text)
    local new = setmetatable({}, {
       __index = function(self, key)
          return button[key] or drawable[key]
@@ -27,14 +29,16 @@ function button.new(pos, size, z_index)
    buttons[#buttons + 1] = new
 
    new._pos = pos
-   new._size = size
+   new._size = vec(width, 8)
 
    new.events = eventlib.newEvents()
    new.events.PRESSED = eventlib.newEvent()
-   new.children = {}
+   new.label = label.new(vec(width / 2, 1), z_index + 10, text or "")
+   new.label:setAlignment("CENTER")
+   new.children = {new.label}
    new.parentPos = vec(0, 0)
 
-   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 2, z_index):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 2, z_index):pos(pos):size(new._size)
 
    return new
 end

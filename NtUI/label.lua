@@ -1,5 +1,5 @@
 ---@class NtUI.Label : NtUI.Drawable
----@field _text string
+---@field _text string|table
 ---@field _task TextTask
 local label = {}
 
@@ -28,7 +28,15 @@ function label.new(pos, z_index, text)
    new._text = text
    new._pos = pos
    new.z_index = z_index
-   new._task = model:newText(tostring(iter)):setText(text):scale(0.65)
+
+   if type(text) == "string" then
+      text = {
+         text = text,
+         color = "black"
+      }
+   end
+
+   new._task = model:newText(tostring(iter)):setText(toJson(text)):scale(0.65)
    iter = iter + 1
 
    return new
@@ -45,16 +53,25 @@ end
 function label:text(text)
    if not text then return end
    self._text = text
-   self._task:setText(text)
+
+   if type(text) == "string" then
+      text = {
+         text = text,
+         color = "black"
+      }
+   end
+
+   self._task:setText(toJson(text))
 end
 
 function label:draw(_, pos)
-   self._task:pos(-pos.x - self._pos.x, -pos.y - self._pos.y, -self.z_index):text(self._text)
+   self._task:pos(-pos.x - self._pos.x, -pos.y - self._pos.y, -self.z_index)
+   self:text(self._text)
    
    for _, v in pairs(self.children) do
       v:draw(self, pos + self._pos)
    end
 end
 
-return label.new(vec(0, 0), "")
+return label.new(vec(0, 0), 0, "")
 
