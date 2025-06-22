@@ -75,6 +75,8 @@ do
    local testWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 32))
    local testText = textbox.new(vec(3, 11), 74, 100)
    local testBox = checkbox.new(vec(3, 20), 100, true)
+   local testBox2 = checkbox.new(vec(14, 20), 100, true)
+   local testButton = button.new(vec(30, 20), 40, 100, "button")
 
    testWindow:addChild(label.new(vec(2.5, 2.25), 100, {
       text = "UI Test",
@@ -83,6 +85,8 @@ do
    }))
    testWindow:addChild(testText)
    testWindow:addChild(testBox)
+   testWindow:addChild(testBox2)
+   testWindow:addChild(testButton)
    testWindow:draw(nil, vec(0, 0))
 end
 
