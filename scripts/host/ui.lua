@@ -2,6 +2,7 @@ local window = require("NtUI.window")
 local button = require("NtUI.button")
 local label = require("NtUI.label")
 local textbox = require("NtUI.textbox")
+local checkbox = require("NtUI.checkbox")
 
 do
    local introWindow = window.new(vec(5, 5), vec(80, 40))
@@ -71,15 +72,17 @@ do
 end
 
 do
-   local textWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 23))
-   local textText = textbox.new(vec(3, 11), 74, 100)
+   local testWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 32))
+   local testText = textbox.new(vec(3, 11), 74, 100)
+   local testBox = checkbox.new(vec(3, 20), 100, true)
 
-   textWindow:addChild(label.new(vec(2.5, 2.25), 100, {
-      text = "Textbox Test",
+   testWindow:addChild(label.new(vec(2.5, 2.25), 100, {
+      text = "UI Test",
       bold = true,
       color = "white"
    }))
-   textWindow:addChild(textText)
-   textWindow:draw(nil, vec(0, 0))
+   testWindow:addChild(testText)
+   testWindow:addChild(testBox)
+   testWindow:draw(nil, vec(0, 0))
 end
 
