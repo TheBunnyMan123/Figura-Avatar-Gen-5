@@ -34,7 +34,7 @@ function button.new(pos, size, z_index)
    new.children = {}
    new.parentPos = vec(0, 0)
 
-   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 2, z_index):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 4, z_index):pos(pos):size(size)
 
    return new
 end
@@ -86,11 +86,11 @@ function events.RENDER()
          v.nineslice:updateUV(vec(0, 0))
          goto continue
       elseif not click:isPressed() then
-         v.nineslice:updateUV(vec(0, 5))
+         v.nineslice:updateUV(vec(0, 0))
          v.held = false
          goto continue
       end
-      v.nineslice:updateUV(vec(0, 10))
+      v.nineslice:updateUV(vec(0, 5))
       if not v.held then
          v.events.CLICK:fire()
          v.held = true

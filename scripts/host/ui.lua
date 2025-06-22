@@ -3,8 +3,8 @@ local button = require("NtUI.button")
 local label = require("NtUI.label")
 
 do
-   local introWindow = window.new(vec(5, 5), vec(80, 36))
-   local introText = label.new(vec(40, 9), 100, toJson {
+   local introWindow = window.new(vec(5, 5), vec(80, 40))
+   local introText = label.new(vec(40, 11), 100, toJson {
       text = "Welcome to my avatar!\n\nCodename: Starveil\nAuthor: TheKillerBunny",
       color = "black"
    })
@@ -16,12 +16,12 @@ do
 end
 
 do
-   local clickWindow = window.new(vec(90, 5), vec(50, 33))
-   local clickText = label.new(vec(25, 9), 100, toJson {
+   local clickWindow = window.new(vec(90, 5), vec(50, 37))
+   local clickText = label.new(vec(25, 11), 100, toJson {
       text = "Clicks: 0",
       color = "black"
    })
-   local clickButton = button.new(vec(15, 15), vec(20, 15), 100)
+   local clickButton = button.new(vec(15, 18), vec(20, 15), 100)
 
    local clicks = 0
    clickText:setAlignment("CENTER")

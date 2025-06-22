@@ -32,7 +32,7 @@ function window.new(pos, size)
    new.events.DELETE = eventlib.newEvent()
    new.children = {}
 
-   new.nineslice = nineslice.new(texture, vec(5, 0), vec(13, 15), 6, 7, #windows):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(5, 0), vec(18, 22), 9, 8, #windows):pos(pos):size(size)
 
    return new
 end
@@ -66,15 +66,15 @@ function events.RENDER()
    for k, v in pairs(windows) do
       local relativeMousePos = oldMousePos - v._pos
       
-      if relativeMousePos.x < 0 or relativeMousePos.x > v._size.x then
+      if relativeMousePos.x < 1 or relativeMousePos.x > v._size.x - 1 then
          goto continue
-      elseif relativeMousePos.y < 0 or relativeMousePos.y > 6 then
+      elseif relativeMousePos.y < 1 or relativeMousePos.y > 8 then
          goto continue
       elseif not click:isPressed() then
          goto continue
       end
 
-      if relativeMousePos.x > v._size.x - 6 then
+      if relativeMousePos.x > v._size.x - 9 and relativeMousePos.x < v._size.x - 2 then
          windows[k] = nil
          v:remove()
          v.events.DELETE:fire()
