@@ -79,8 +79,8 @@ do
 end
 
 do
-   local textWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 40))
-   local textText = textbox.new(vec(2, 11), 76, 100)
+   local textWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 23))
+   local textText = textbox.new(vec(3, 11), 74, 100)
 
    textWindow:addChild(label.new(vec(2.5, 2.25), 100, toJson {
       text = "Textbox Test",

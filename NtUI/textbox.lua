@@ -121,8 +121,8 @@ end)
 
 local backspace = keybinds:of("Backspace", "key.keyboard.backspace", true):getID()
 
-function events.KEY_PRESS(key)
-   if key == backspace then
+function events.KEY_PRESS(key, state)
+   if key == backspace and state ~= 0 then
       for k, v in pairs(textboxes) do
          if v.typing then
             v.text = v.text:gsub(".$", "")

@@ -34,6 +34,10 @@ function button.new(pos, size, z_index)
    new.children = {}
    new.parentPos = vec(0, 0)
 
+   new.events.CLICK:register(function()
+      print("test")
+   end)
+
    new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 4, z_index):pos(pos):size(size)
 
    return new
