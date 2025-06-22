@@ -15,6 +15,10 @@ local window = {}
 
 local texture = textures["NtUI.theme"]
 
+---Creates a new window
+---@param pos Vector2
+---@param size Vector2
+---@return NtUI.Window
 function window.new(pos, size)
    local new = setmetatable({}, {
       __index = function(self, key)
@@ -48,8 +52,6 @@ function window:addChild(child)
    self:draw(nil, self._pos / -client.getGuiScale())
 end
 
----Sets the window's position
----@param pos Vector2
 function window:pos(pos)
    self._pos = pos
    self.nineslice:pos(pos)

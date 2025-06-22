@@ -19,7 +19,7 @@ do
 end
 
 do
-   local clickWindow = window.new(vec(90, 5), vec(50, 29))
+   local clickWindow = window.new(vec(90, 5), vec(50, 30))
    clickWindow:addChild(label.new(vec(2.5, 2.25), 100, {
       text = "MagiClick",
       bold = true,

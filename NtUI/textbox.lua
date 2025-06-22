@@ -20,6 +20,11 @@ local texture = textures["NtUI.theme"]
 local textbox = {}
 
 local eventIter = 0
+---Creates a new textbox
+---@param pos Vector2
+---@param width integer
+---@param z_index integer
+---@return NtUI.Textbox
 function textbox.new(pos, width, z_index)
    local new = setmetatable({}, {
       __index = function(self, key)
@@ -61,8 +66,6 @@ function textbox:addChild(child)
    self:draw(nil, self._pos / -client.getGuiScale())
 end
 
----Sets the textbox's position
----@param pos Vector2
 function textbox:pos(pos)
    self._pos = pos
    self.nineslice:pos(pos)

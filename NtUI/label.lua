@@ -1,4 +1,4 @@
----@class NtUI.Label : NtUI.Drawable
+---@class NtUI.Label : NtUI.Drawable, TextTask
 ---@field _text string|table
 ---@field _task TextTask
 local label = {}
@@ -7,6 +7,11 @@ local drawable = require("NtUI.drawable")
 local model = models:newPart("NtUI.Labels", "HUD")
 
 local iter = 0
+---Creates a new label
+---@param pos Vector2
+---@param z_index integer
+---@param text string|table
+---@return NtUI.Label
 function label.new(pos, z_index, text)
    local new = setmetatable({}, {
       __index = function(self, key)
@@ -50,6 +55,8 @@ function label:remove()
    self._task:remove()
 end
 
+---Updates the label's text
+---@param text string|table
 function label:text(text)
    if not text then return end
    self._text = text

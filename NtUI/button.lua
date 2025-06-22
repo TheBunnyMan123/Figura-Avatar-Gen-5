@@ -18,6 +18,12 @@ local texture = textures["NtUI.theme"]
 ---@field label NtUI.Label
 local button = {}
 
+---Creates a new button
+---@param pos Vector2
+---@param width integer
+---@param z_index integer
+---@param text string|table
+---@return NtUI.Button
 function button.new(pos, width, z_index, text)
    local new = setmetatable({}, {
       __index = function(self, key)
@@ -29,11 +35,11 @@ function button.new(pos, width, z_index, text)
    buttons[#buttons + 1] = new
 
    new._pos = pos
-   new._size = vec(width, 8)
+   new._size = vec(width, 9)
 
    new.events = eventlib.newEvents()
    new.events.PRESSED = eventlib.newEvent()
-   new.label = label.new(vec(width / 2, 1), z_index + 10, text or "")
+   new.label = label.new(vec(width / 2, 2), z_index + 10, text or "")
    new.label:setAlignment("CENTER")
    new.children = {new.label}
    new.parentPos = vec(0, 0)
@@ -56,8 +62,6 @@ function button:addChild(child)
    self:draw(nil, self._pos / -client.getGuiScale())
 end
 
----Sets the button's position
----@param pos Vector2
 function button:pos(pos)
    self._pos = pos
    self.nineslice:pos(pos)
