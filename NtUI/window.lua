@@ -32,7 +32,7 @@ function window.new(pos, size)
    new.events.DELETE = eventlib.newEvent()
    new.children = {}
 
-   new.nineslice = nineslice.new(texture, vec(5, 0), vec(18, 22), 9, 8, #windows):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(5, 0), vec(18, 22), 9, 8, #windows * 3):pos(pos):size(size)
 
    return new
 end
