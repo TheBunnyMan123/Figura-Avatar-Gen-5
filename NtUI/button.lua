@@ -11,7 +11,7 @@ local texture = textures["NtUI.theme"]
 ---@field _pos Vector2
 ---@field _size Vector2
 ---@field parentPos Vector2
----@field events = {CLICK: Event}
+---@field events {PRESSED: Event}
 ---@field nineslice NtUI.Nineslice
 ---@field children NtUI.Drawable[]
 local button = {}
@@ -30,15 +30,11 @@ function button.new(pos, size, z_index)
    new._size = size
 
    new.events = eventlib.newEvents()
-   new.events.CLICK = eventlib.newEvent()
+   new.events.PRESSED = eventlib.newEvent()
    new.children = {}
    new.parentPos = vec(0, 0)
 
-   new.events.CLICK:register(function()
-      print("test")
-   end)
-
-   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 4, z_index):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(0, 0), vec(5, 5), 2, 2, z_index):pos(pos):size(size)
 
    return new
 end
@@ -96,7 +92,7 @@ function events.RENDER()
       end
       v.nineslice:updateUV(vec(0, 5))
       if not v.held then
-         v.events.CLICK:fire()
+         v.events.PRESSED:fire()
          v.held = true
       end
       v.key = k

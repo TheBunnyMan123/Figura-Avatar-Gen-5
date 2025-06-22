@@ -1,4 +1,4 @@
-nameplate.ENTITY:setVisible(true)
+nameplate.ENTITY:setVisible(false)
 
 local json = {
    {

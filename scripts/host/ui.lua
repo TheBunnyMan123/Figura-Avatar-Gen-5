@@ -34,7 +34,7 @@ do
 
    local clicks = 0
    clickText:setAlignment("CENTER")
-   clickButton.events.CLICK:register(function()
+   clickButton.events.PRESSED:register(function()
       clicks = clicks + 1
       clickText:text(toJson {
          text = "Clicks: " .. clicks,
@@ -42,38 +42,36 @@ do
       })
    end)
 
-   clickWindow:addChild(clickButton)
    clickWindow:addChild(clickText)
+   clickWindow:addChild(clickButton)
    clickWindow:draw(nil, vec(0, 0))
 end
 
 do
-   local serverWindow = window.new(vec(5, 50), vec(130, 50))
-   local serverLabel = label.new(vec(3, 11), 100, "LOADING")
-   
+   local serverData = client.getServerData()
+   local serverLabel = label.new(vec(3, 11), 100, "")
+   local text = ""
+
+   for k, v in pairs(serverData) do
+      text = text .. "\xC2\xA7r===== " .. k:gsub("^.", string.upper) .. " =====\n" .. v:gsub("\n *", "\n"):gsub("^ *", "") .. "\n"
+   end
+
+   serverLabel:text(toJson {
+      text = text,
+      color = "black"
+   })
+
+   local dims = client.getTextDimensions(text) * 0.65
+
+   local serverWindow = window.new(vec(5, 50), dims + vec(5, 8))
+   serverLabel:pos(vec(dims.x / 2 + 2, 11))
+   serverLabel:setAlignment("CENTER")
+
    serverWindow:addChild(label.new(vec(2.5, 2.25), 100, toJson {
       text = "Server Info",
       bold = true
    }))
    serverWindow:addChild(serverLabel)
-
-   function events.WORLD_TICK()
-      local serverData = client.getServerData()
-      local text = ""
-
-      for k, v in pairs(serverData) do
-         text = text .. "\xC2\xA7r===== " .. k:gsub("^.", string.upper) .. " =====\n" .. v:gsub("\n *", "\n"):gsub("^ *", "") .. "\n"
-      end
-
-      serverLabel:text(toJson {
-         text = text,
-         color = "black"
-      })
-
-      local dims = client.getTextDimensions(text) * 0.65
-      serverWindow.nineslice:size(dims:ceil() + vec(5, 12))
-      serverWindow._size = client.getTextDimensions(text) + vec(5, 12)
-   end
 
    serverWindow:draw(nil, vec(0, 0))
 end
