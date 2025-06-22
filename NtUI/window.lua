@@ -1,6 +1,7 @@
 local windows = {}
 local drawable = require("NtUI.drawable")
 local eventlib = require("libs.TheKillerBunny.BunnyEventLib")
+local nineslice = require("NtUI.nineslice")
 
 local click = keybinds:newKeybind("Click", "key.mouse.left", true)
 
@@ -11,6 +12,8 @@ local click = keybinds:newKeybind("Click", "key.mouse.left", true)
 ---@field nineslice NtUI.Nineslice
 ---@field children NtUI.Drawable[]
 local window = {}
+
+local texture = textures["NtUI.theme"]
 
 function window.new(pos, size)
    local new = setmetatable({}, {
@@ -29,7 +32,7 @@ function window.new(pos, size)
    new.events.DELETE = eventlib.newEvent()
    new.children = {}
 
-   new.nineslice = require("NtUI.nineslice").new(textures["NtUI.theme"], vec(5, 0), vec(13, 15), 6, 7):pos(pos):size(size)
+   new.nineslice = nineslice.new(texture, vec(5, 0), vec(13, 15), 6, 7, #windows):pos(pos):size(size)
 
    return new
 end

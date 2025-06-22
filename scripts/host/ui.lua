@@ -1,11 +1,40 @@
-local window = require("NtUI.window").new(vec(10, 10), vec(80, 60))
-local drawable = require("NtUI.drawable").new(vec(1, 7))
-local label2 = require("NtUI.label").new(vec(1.5, 1.5), 100, toJson {
-   text = "Isn't this test window\nso cool?",
-   color = "black"
-})
+local window = require("NtUI.window")
+local button = require("NtUI.button")
+local label = require("NtUI.label")
 
-drawable:addChild(label2)
-window:addChild(drawable)
-window:draw(nil, vec(0, 0))
+do
+   local introWindow = window.new(vec(5, 5), vec(80, 36))
+   local introText = label.new(vec(40, 9), 100, toJson {
+      text = "Welcome to my avatar!\n\nCodename: Starveil\nAuthor: TheKillerBunny",
+      color = "black"
+   })
+
+   introText:setAlignment("CENTER")
+
+   introWindow:addChild(introText)
+   introWindow:draw(nil, vec(0, 0))
+end
+
+do
+   local clickWindow = window.new(vec(90, 5), vec(50, 33))
+   local clickText = label.new(vec(25, 9), 100, toJson {
+      text = "Clicks: 0",
+      color = "black"
+   })
+   local clickButton = button.new(vec(15, 15), vec(20, 15), 100)
+
+   local clicks = 0
+   clickText:setAlignment("CENTER")
+   clickButton.events.CLICK:register(function()
+      clicks = clicks + 1
+      clickText:text(toJson {
+         text = "Clicks: " .. clicks,
+         color = "black"
+      })
+   end)
+
+   clickWindow:addChild(clickButton)
+   clickWindow:addChild(clickText)
+   clickWindow:draw(nil, vec(0, 0))
+end
 
