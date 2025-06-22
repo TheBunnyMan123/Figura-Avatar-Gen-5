@@ -1,6 +1,7 @@
 local window = require("NtUI.window")
 local button = require("NtUI.button")
 local label = require("NtUI.label")
+local textbox = require("NtUI.textbox")
 
 do
    local introWindow = window.new(vec(5, 5), vec(80, 40))
@@ -75,5 +76,17 @@ do
    end
 
    serverWindow:draw(nil, vec(0, 0))
+end
+
+do
+   local textWindow = window.new(vec(client.getScaledWindowSize().x - 85, 5), vec(80, 40))
+   local textText = textbox.new(vec(2, 11), 76, 100)
+
+   textWindow:addChild(label.new(vec(2.5, 2.25), 100, toJson {
+      text = "Textbox Test",
+      bold = true
+   }))
+   textWindow:addChild(textText)
+   textWindow:draw(nil, vec(0, 0))
 end
 
