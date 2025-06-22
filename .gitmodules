@@ -1,0 +1,4 @@
+[submodule "NtUI"]
+	path = NtUI
+	url = https://github.com/TheBunnyMan123/NtUI.git
+	branch = master
