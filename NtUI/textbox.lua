@@ -113,6 +113,7 @@ function events.RENDER()
    end
 end
 
+local ctrl = keybinds:of("Control", "key.keyboard.left.control", true)
 keybinds:of("Enter", "key.keyboard.enter", true):onPress(function()
    for k, v in pairs(textboxes) do
       v.typing = false
@@ -144,7 +145,12 @@ end
 function events.CHAR_TYPED(char)
    for _, v in pairs(textboxes) do
       if v.typing then
-         v.text = v.text .. char
+         if ctrl:isPressed() and char == "v" then
+            v.text = v.text .. host:getClipboard():gsub("[\n\t]", "")
+         else
+            v.text = v.text .. char
+         end
+
          local textToSet = v.text
          while client.getTextWidth(textToSet) * 0.68 > v._size.x do
             textToSet = textToSet:gsub("^.", "")
