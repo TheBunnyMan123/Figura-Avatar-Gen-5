@@ -1,6 +1,6 @@
 local windows = {}
 local drawable = require("NtUI.drawable")
-local eventlib = require("libs.TheKillerBunny.BunnyEventLib")
+local eventlib = require("NtUI.BunnyEventLib")
 local nineslice = require("NtUI.nineslice")
 
 local click = keybinds:newKeybind("Click", "key.mouse.left", true)
