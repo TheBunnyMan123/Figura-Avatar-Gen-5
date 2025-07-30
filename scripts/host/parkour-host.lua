@@ -5,6 +5,7 @@ local function particles(type, pos, intensity)
 end
 
 local function allowed()
+   if true then return false end
    if player:isLoaded() and player:getPermissionLevel() > 1 then
       return true
    elseif client.getServerData().ip == "plaza.figuramc.org" then
