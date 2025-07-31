@@ -1,3 +1,9 @@
+if host:isHost() and not host:isAvatarUploaded() then
+   for _, v in pairs(listFiles("scripts.debug", true)) do
+      require(v)
+   end
+end
+
 for _, v in pairs(listFiles("scripts.init", true)) do
    require(v)
 end
