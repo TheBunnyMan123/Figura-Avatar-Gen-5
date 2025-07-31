@@ -45,7 +45,10 @@ end
 
 local ui = models:newPart("executionTimeUI", "HUD")
 function events.WORLD_TICK()
-   if host:isAvatarUploaded() then return end
+   if host:isAvatarUploaded() then
+      ui:setVisible(false)
+      return
+   end
 
    for i, v in ipairs(times) do
       ui:newText(v.script .. tostring(i))
