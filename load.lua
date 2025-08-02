@@ -1,3 +1,6 @@
+wheel = action_wheel:newPage("Main")
+action_wheel:setPage(wheel)
+
 if host:isHost() and not host:isAvatarUploaded() then
    for _, v in pairs(listFiles("scripts.debug", true)) do
       require(v)
