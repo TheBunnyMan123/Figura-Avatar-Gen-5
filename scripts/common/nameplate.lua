@@ -1,4 +1,6 @@
 nameplate.ENTITY:setVisible(false)
+   :setOutline(true)
+   :setOutlineColor(vectors.hexToRGB("#154020"))
 
 local json = {
    {
@@ -28,7 +30,7 @@ for i = 1, #name do
       task = holder:newText("task" .. i):setText(toJson {
          text = name[i],
          color = "#32FF96"
-      }):setOutline(true):setPos(-width, 0):setScale(3/8):setLight(15),
+      }):setOutline(true):setPos(-width, 0):setScale(3/8):setLight(15):setOutlineColor(vectors.hexToRGB("#154020")),
       offset = i,
       prevWidth = width
    }
