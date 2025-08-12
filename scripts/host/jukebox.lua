@@ -1,4 +1,4 @@
-if client.compareVersions("1.20.4", client.getVersion()) > 0 then return end
+if client.compareVersions("1.20.4", client.getVersion()) <= 0 then return end
 if not file:allowed() or not file:isDirectory("songs") then return end
 
 local page = action_wheel:newPage("Songs")
