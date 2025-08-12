@@ -54,7 +54,7 @@ function events.RENDER(delta)
          math.sin((tick + v.offset - 1) / 4),
          math.sin((tick + v.offset) / 4),
          delta
-      ))
+      )):setVisible(not player:isInvisible() and client.isHudEnabled())
    end
 end
 
