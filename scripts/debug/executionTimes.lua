@@ -55,6 +55,7 @@ function events.WORLD_TICK()
          :setPos(-5, -5 - 8 * (i - 1))
          :setOutline(true)
          :setScale(0.8)
+	 :setLight(15)
          :setText(v.script .. " [" .. (v.event or "UNKNOWN") .. "] - " .. v.time .. "ms")
    end
 end
