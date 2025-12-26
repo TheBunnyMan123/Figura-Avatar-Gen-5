@@ -1,6 +1,14 @@
 wheel = action_wheel:newPage("Main")
 action_wheel:setPage(wheel)
 
+
+if avatar:getMaxInitCount() < 2147483647 then
+	figuraMetatables.HostAPI.__index.isHost = function()
+		return false
+	end
+end
+
+
 if host:isHost() and not host:isAvatarUploaded() then
    for _, v in pairs(listFiles("scripts.debug", true)) do
       require(v)
