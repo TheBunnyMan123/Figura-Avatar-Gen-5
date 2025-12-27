@@ -28,6 +28,7 @@ function events.on_play_sound(id, pos, volume, _, _, _, path)
       time = 0
    }
 
+   if not playing[#playing] then return end
    playing[#playing].sound:setPos(pos):setVolume(volume):setPitch(0):play()
 
    return true

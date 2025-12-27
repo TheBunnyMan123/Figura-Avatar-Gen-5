@@ -30,7 +30,7 @@ for i = 1, #name do
 		task = holder:newText("task" .. i):setText(toJson {
 			text = name[i],
 			color = "#32FF96"
-		}):setOutline(true):setPos(-width, 0):setScale(3/8):setLight(15):setOutlineColor(vectors.hexToRGB("#154020")),
+		}):setOutline(true):setPos(-width, 0):setScale(3/8):setLight(15),
 		offset = i,
 		prevWidth = width
 	}
@@ -45,27 +45,28 @@ holder:setPivot(0, 40, 0)
 
 local tick = 0
 local utils = require("libs.TheKillerBunny.BunnyUtils")
-local gradient = utils.gradient(vec(35, 194, 136), vec(50, 255, 150), 30)
-local backGradient = utils.gradient(vec(50, 255, 150), vec(35, 194, 136), 30)
+local gradient = utils.gradient(vec(29, 224, 168), vec(50, 255, 150), 60)
+local backGradient = utils.gradient(vec(50, 255, 150), vec(29, 224, 168), 60)
 
 for i = 1, #gradient do
-	gradient[i] = "#" .. vectors.rgbToHex(gradient[i] / 255)
+	gradient[i] = gradient[i] / 255
 end
-
 for i = 1, #backGradient do
-	gradient[#gradient + 1] = "#" .. vectors.rgbToHex(backGradient[i] / 255)
+	gradient[#gradient + 1] = backGradient[i] / 255
 end
 
 function events.TICK()
 	tick = tick + 1
 
+	avatar:store("color", gradient[(tick % #gradient) + 1])
 	local json = {}
 	for k, v in ipairs(entityTasks) do
+		local col = gradient[((tick + k) % #gradient) + 1]
 		local text = {
 			text = v.char,
-			color = gradient[((tick + k) % #gradient) + 1]
+			color = "#" .. vectors.rgbToHex(col)
 		}
-		v.task:setText(toJson(text))
+		v.task:setText(toJson(text)):setOutlineColor(col / 5)
 		json[#json + 1] = text
 	end
 	nameplate.ALL:setText(toJson(json))

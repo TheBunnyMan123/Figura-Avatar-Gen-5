@@ -23,7 +23,7 @@ function events.TICK()
 		indicators[#indicators].task:getTask(tostring(#indicators))
 			:setText(toJson {
 				text = "-" .. tostring(math.round(health - player:getHealth())),
-				color = "#" .. vectors.rgbToHex(gradient[math.clamp(math.round(health - player:getHealth()), 1, 20)] / 255)
+				color = "#" .. vectors.rgbToHex((gradient[math.clamp(math.round(health - player:getHealth()), 1, 20)] or vec(255, 0, 0)) / 255)
 			})
 
 		setDamage = false
