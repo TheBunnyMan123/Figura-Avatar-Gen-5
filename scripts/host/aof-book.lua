@@ -1,4 +1,3 @@
-if true then return end
 local pages = {
    {"String Bass", {
       "Logs",
@@ -67,6 +66,9 @@ local pages = {
    }},
    {" Anvil", {
       "Anvil"
+   }},
+   {" Piano", {
+	"Loom"
    }},
    {"Extra", {
       "Custom Sounds - Player Head NBT",
