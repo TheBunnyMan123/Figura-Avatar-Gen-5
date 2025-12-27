@@ -1,5 +1,3 @@
-if true then return end
-
 local heads = {}
 local skull = models:newPart("TKBUNNY$SKULL")
 	:setParentType("SKULL")
@@ -18,18 +16,25 @@ for i = 1, 8 do
 	heads[i] = new
 end
 
+local add = 1
 local tick = 0
 function events.WORLD_TICK()
-	tick = tick + 1
+	tick = tick + add
+	if tick > 500 or tick < 1 then
+		add = add * -1
+	end
 end
 
 function events.SKULL_RENDER(delta)
 	for i, v in ipairs(heads) do
 		local pos = vectors.rotateAroundAxis(
-			i * 45 + (math.lerp(tick - 1, tick, delta)^1.1)/5,
-			vec(0, 0, ((math.lerp(tick - 1, tick, delta)^1.1)/5)), vec(0, 1, 0))
+			i * 45 + (math.lerp(tick - add, tick, delta)^1.1)/5,
+			vec(0, 0, ((math.lerp(tick - add, tick, delta)^1.1)/5)), vec(0, 1, 0))
+		
+		pos = pos
 		v:setPos(pos / 10)
 		v:setRot(pos)
+		v:setScale(pos.x / 250)
 	end
 end
 
