@@ -36,8 +36,6 @@ for _, v in ipairs(star_connections) do
 
 	for i = 1, 14 do
 		positions[#positions + 1] = prev_pos + (delta_div * i)
-
-		print(prev_pos + (delta_div * i))
 	end
 end
 
