@@ -34,7 +34,7 @@ function events.RENDER(delta)
    for _, v in pairs(particles) do
       local pos = math.lerp(v.oldPos, v.pos, delta)
       local rot = client.getCameraRot() - 180
-      v.task:setColor(v.color):setLight(15):setPos((pos*16) + getParticleOffsetFromRotation(rot, vectors.vec3(), (v.task:getScale() or 1)*v.task:getSize().xy_))
+      v.task:setLight(15):setPos((pos*16) + getParticleOffsetFromRotation(rot, vectors.vec3(), (v.task:getScale() or 1)*v.task:getSize().xy_))
       v.task:setRot(rot)
    end
 end
@@ -45,12 +45,6 @@ local particleMetatable = {
 
 function particleMetatable.__index.setScale(self, num)
    self._scale = num
-
-   return self
-end
-
-function particleMetatable.__index.setColor(self, col)
-   self._color = col
 
    return self
 end
@@ -104,7 +98,6 @@ function particleMetatable.__index.spawn(self)
       life = 0,
       vel = self._vel,
       resistance = self._resistance,
-      color = self._color,
       stages = self._stages,
       stageLifetime = self._lifetime / (#self._stages+1)
    })
@@ -121,7 +114,6 @@ function lib.newParticle(stages, lifetime, velocity, resistance)
       _pos = vectors.vec3(),
       _vel = velocity/16,
       _resistance = resistance,
-      _color = vec(1, 1, 1),
    }, particleMetatable)
 end
 

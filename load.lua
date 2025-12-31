@@ -19,6 +19,10 @@ for _, v in pairs(listFiles("scripts.init", true)) do
    require(v)
 end
 
+for _, v in pairs(listFiles("libs.playerInt", true)) do
+   require(v)
+end
+
 for _, v in pairs(listFiles("scripts.common", true)) do
    require(v)
 end
