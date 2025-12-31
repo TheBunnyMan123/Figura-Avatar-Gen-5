@@ -64,7 +64,7 @@ end
 page:newAction():setTitle("Store Item"):setItem("ender_chest"):setOnLeftClick(function()
 	local item = host:getSlot("weapon.mainhand")
 	stored_items[#stored_items + 1] = item:getID() .. toJson(item:getTag())
-	if item:getID() == "minecraft:player_head" then
+	if item:getID() == "minecraft:player_head" or item:getID() == "minecraft:shulker_box" then
 		stored_items[#stored_items] = stored_items[#stored_items]:gsub('"Id":%[','"Id":[I;')
 	end
 	append_item(stored_items[#stored_items])
