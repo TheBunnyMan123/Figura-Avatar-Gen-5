@@ -4,11 +4,11 @@ local function particles(type, pos, intensity)
 	end
 end
 
-local disabled = false
+local disabled = true
 wheel:newAction():setTitle("Parkour"):setItem("diamond_boots")
 	:setOnToggle(function(state)
 		disabled = not state
-	end):setToggled(true)
+	end)
 
 local function allowed()
 	if disabled then return end
