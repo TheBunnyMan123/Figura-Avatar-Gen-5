@@ -1,0 +1,36 @@
+local ctrl = keybinds:newKeybind("ctrl", "key.keyboard.left.control")
+local shift = keybinds:newKeybind("shift", "key.keyboard.left.shift")
+local page = action_wheel:newPage("Jump")
+wheel:newAction():setTitle("Jump"):setItem("ender_pearl"):setOnLeftClick(function()
+	action_wheel:setPage(page)
+end)
+page:newAction():setTitle("back"):setItem("arrow"):setOnLeftClick(function()
+	action_wheel:setPage(wheel)
+end)
+
+local distance = 2
+local interval = 15
+
+page:newAction():setTitle("Distance [2]"):setItem("name_tag")
+	:setOnScroll(function(dir, self)
+		distance = distance + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 10 or 1)
+		self:setTitle(string.format("Distance [%d]", distance))
+	end)
+page:newAction():setTitle("Lock Interval [15]"):setItem("compass")
+	:setOnScroll(function(dir, self)
+		interval = interval + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 10 or 1)
+		self:setTitle(string.format("Lock Interval [%d]", interval))
+	end)
+
+page:newAction():setTitle("Lock Rotation"):setItem("ender_eye"):setOnLeftClick(function()
+	goofy:setRot((player:getRot() / interval + 0.5):floor() * interval)
+	goofy:setBodyRot((player:getRot() / interval + 0.5):floor().y * interval)
+end)
+page:newAction():setTitle("Center on Block"):setItem("filled_map"):setOnLeftClick(function()
+	local pos = player:getPos()
+	goofy:setPos(math.floor(pos.x) + 0.5, pos.y, math.floor(pos.z) + 0.5)
+end)
+page:newAction():setTitle("Jump"):setItem("nether_star"):setOnLeftClick(function()
+	goofy:setPos(player:getPos() + player:getLookDir() * distance)
+end)
+

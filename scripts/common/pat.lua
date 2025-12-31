@@ -179,11 +179,11 @@ local function pat(target)
 	local halfBox = targetInfo.box / 2
 	local particleHalfBox = targetInfo.box - halfBox.x_z
 
-	--local playerHeartPos = (player:getVariable("patpat.boundingBox") or player:getBoundingBox()).y / 2
-	--local playerHeartVec = vec(0, playerHeartPos, 0) + player:getPos()
+	local playerHeartPos = (player:getVariable("patpat.boundingBox") or player:getBoundingBox()).y / 2
+	local playerHeartVec = vec(0, playerHeartPos, 0) + player:getPos()
 
 	particle:setPos(targetInfo.pos + randomVec(particleHalfBox)):setVelocity(vec(0, 3, 0) * ((math.random() / 5) + 0.9)):spawn()
-	--particle:setPos(playerHeartVec):setVelocity((targetInfo.pos + halfBox:copy():mul(0, 1.25, 0) - playerHeartVec) * 2.35):spawn()
+	particle:setPos(playerHeartVec):setVelocity((targetInfo.pos + halfBox:copy():mul(0, 1.25, 0) - playerHeartVec) * 2.35):spawn()
 end
 
 ---@diagnostic disable-next-line unused-variable
