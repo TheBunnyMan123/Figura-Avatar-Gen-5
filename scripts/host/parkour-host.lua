@@ -59,8 +59,6 @@ shift:setOnPress(function()
 	if not host:isFlying() and player:getVelocity().y > -2 and not longjumping and not player:getVehicle() and not player:isOnGround() and not player:isGliding() and not space:isPressed() then
 		goofy:setVelocity(player:getVelocity().x_z:add(0, -2, 0))
 		slamming = -0.5
-
-		return true
 	end
 end)
 
