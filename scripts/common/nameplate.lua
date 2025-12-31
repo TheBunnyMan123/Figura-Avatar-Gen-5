@@ -67,6 +67,7 @@ function events.TICK()
 			color = "#" .. vectors.rgbToHex(col)
 		}
 		v.task:setText(toJson(text)):setOutlineColor(col / 5)
+			:setSeeThrough(not player:isSneaking())
 		json[#json + 1] = text
 	end
 	nameplate.ALL:setText(toJson(json))
