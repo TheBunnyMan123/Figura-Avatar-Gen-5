@@ -1,18 +1,92 @@
 nameplate.ENTITY:setVisible(false)
-:setOutline(true)
-:setOutlineColor(vectors.hexToRGB("#154020"))
+	:setOutline(true)
+	:setOutlineColor(vectors.hexToRGB("#154020"))
 
-local json = {
+local hover = {
 	{
-		text = "${badges}"
+		text = "",
+		font = "minecraft:default",
+		color = "#00BF56",
 	},
 	{
-		text = "\nTheKillerBunny",
+		text = "---------|  ɪɴꜰᴏ  |---------\n",
+	},
+	{
+		text = "• ᴜꜱᴇʀɴᴀᴍᴇ",
 		color = "#32FF96"
-	}
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "ᴛʜᴇᴋɪʟʟᴇʀʙᴜɴɴʏ\n",
+		color = "#1de0a8"
+	},
+	{
+		text = "• ᴘʀᴏɴᴏᴜɴꜱ",
+		color = "#32FF96"
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "ʜᴇ/ʜɪᴍ\n",
+		color = "#1de0a8"
+	},
+	{
+		text = "• ꜰʟᴀɢ",
+		color = "#32FF96"
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "ᴀʀᴏᴀᴄᴇ\n",
+		color = "#1de0a8"
+	},
+	{
+		text = "• ᴛɪᴍᴇ ᴢᴏɴᴇ",
+		color = "#32FF96"
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "ᴄᴛ\n\n",
+		color = "#1de0a8"
+	},
+	{
+		text = "------| ꜱᴏᴄɪᴀʟ ᴍᴇᴅɪᴀ |------\n",
+	},
+	{
+		text = "• ᴅɪꜱᴄᴏʀᴅ",
+		color = "#32FF96"
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "@ᴛʜᴇᴋɪʟʟᴇʀʙᴜɴɴʏ\n",
+		color = "#1de0a8"
+	},
+	{
+		text = "• ʙʟᴜᴇꜱᴋʏ",
+		color = "#32FF96"
+	},
+	{
+		text = ": ",
+	},
+	{
+		text = "@ᴛᴋʙᴜɴɴʏ.ɴᴇᴛ",
+		color = "#1de0a8"
+	},
 }
-
-nameplate.ALL:setText(toJson(json))
+local info = {
+	{"Username", "TheKillerBunny"},
+	{"Pronouns", "He / Him"},
+	{"Flag", ":aroace: aroace"},
+	{"Time Zone", ":flag_us: CT"}
+}
 
 local nameText = "\xE2\x9C\xA8TheKillerBunny\xE2\x9C\xA8"
 local name = {}
@@ -64,7 +138,15 @@ function events.TICK()
 		local col = gradient[((tick + k) % #gradient) + 1]
 		local text = {
 			text = v.char,
-			color = "#" .. vectors.rgbToHex(col)
+			color = "#" .. vectors.rgbToHex(col),
+			hoverEvent = {
+				action = "show_text",
+				value = hover
+			},
+			hover_event = {
+				action = "show_text",
+				value = hover
+			}
 		}
 		v.task:setText(toJson(text)):setOutlineColor(col / 5)
 			:setSeeThrough(not player:isSneaking())
