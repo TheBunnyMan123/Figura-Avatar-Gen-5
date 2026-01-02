@@ -13,6 +13,10 @@ function events.TICK()
 		local command = string.format("summon %s %f %f %f {Motion:[%fd,%fd,%fd],Fuse:80,fuse:80}",
 			entity, pos.x, pos.y, pos.z, dir.x, dir.y, dir.z)
 
+		if entity == "minecraft:flint_and_steel" then
+			entity = "minecraft:fire"
+		end
+
 		local block = pcall(world.newBlock, entity)
 		if entity ~= "minecraft:tnt" and block then
 			command = string.format("summon falling_block %f %f %f {BlockState:{Name:\"%s\"},Time:1,Motion:[%fd,%fd,%fd],HurtEntities:%s}",

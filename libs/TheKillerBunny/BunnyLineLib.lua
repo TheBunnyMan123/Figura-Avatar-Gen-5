@@ -50,7 +50,7 @@ end
 ---@param lifetime number
 ---@param color? Vector3
 ---@return Particle[][]
-function funcs.box(c1, c2, lifetime, color)
+function funcs.box(c1, c2, lifetime, stepsMul, color)
   local x1, y1, z1 = math.min(c1.x, c2.x), math.min(c1.y, c2.y), math.min(c1.z, c2.z)
   local x2, y2, z2 = math.max(c1.x, c2.x), math.max(c1.y, c2.y), math.max(c1.z, c2.z)
 
@@ -58,7 +58,7 @@ function funcs.box(c1, c2, lifetime, color)
 
   local function ln(start, target, clr)
     clr = clr or vec(1, 1, 1)
-    return funcs.line(start, target, math.floor((start - target):length()) * 2, clr, lifetime)
+    return funcs.line(start, target, math.round((start - target):length()) * stepsMul, clr, lifetime)
   end
  
   table.insert(genParticles, ln(vec(x1, y1, z1), vec(x2, y1, z1), color or vec(1, 0.2, 0.2)))

@@ -27,7 +27,10 @@ end
 
 click:setOnPress(function()
 	if not action:isToggled() then return end
-	local target, hitpos = player:getTargetedEntity(20)
+	local eyePos = player:getPos():add(0, player:getEyeHeight())
+	local target, hitpos = raycast:entity(eyePos, eyePos + player:getLookDir() * 100, function(ent)
+		return ent ~= player
+	end)
 	if target then
 		pings.movement_info(target:getUUID(), math.abs((player:getPos() - target:getPos()):length()))
 	end
@@ -43,9 +46,12 @@ end)
 
 function events.MOUSE_SCROLL(dir)
 	if not moved_uuid then return end
-	pings.movement_info(moved_uuid, movement_distance + ((dir > 0) and 2 or -2))
+	pings.movement_info(moved_uuid, math.max(2, movement_distance + ((dir > 0) and 1 or -1)))
 end
 
+local tick = 0
+local line = require("libs.TheKillerBunny.BunnyLineLib")
+print(getmetatable(line).__index)
 function events.TICK()
 	if not moved_uuid then return end
 	if not func then return end
@@ -53,8 +59,22 @@ function events.TICK()
 	local ent = world.getEntity(moved_uuid)
 	if not ent then return end
 
-	local vel = player:getPos():add(0, player:getEyeHeight()):add(player:getLookDir() * movement_distance) - ent:getPos()
+
+	local center = ent:getPos():add(0, ent:getBoundingBox().y / 2)
+	local halfBox = ent:getBoundingBox():div(2, 2, 2)
+	local eye = player:getPos():add(0, player:getEyeHeight())
+	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
 	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
+
+	tick = tick + 1
+	if tick % 5 == 0 then
+		if not host:isHost() then
+			line.line(eye:copy(), center:copy(), math.round((center - eye):length() * 1.5),
+				vec(1, 1, 1), 10, 1)
+		end
+
+		line.box(center - halfBox - vec(0.1, 0.1, 0.1), center + halfBox + vec(0.1, 0.1, 0.1), 10, 1.5)
+	end
 
 	if not success then
 		pings.movement_info(nil)
