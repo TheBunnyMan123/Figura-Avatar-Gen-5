@@ -56,9 +56,20 @@ end
 click:setOnPress(function()
 	if not action:isToggled() then return end
 	local eyePos = player:getPos():add(0, player:getEyeHeight())
-	local target, hitpos = raycast:entity(eyePos, eyePos + player:getLookDir() * 30, function(ent)
+	local target, hitpos = raycast:entity(eyePos, eyePos + player:getLookDir() * 100, function(ent)
 		return ent ~= player
 	end)
+	local block, blockpos = raycast:block(eyePos, eyePos + player:getLookDir() * 190)
+
+	if block then
+		local entLength = (hitpos - eyePos):length()
+		local blkLength = (blockpos - eyePos):length()
+
+		if blkLength < entLength then
+			return
+		end
+	end
+
 	if target then
 		pings.movement_info(target:getUUID(), math.abs((player:getPos() - target:getPos()):length()))
 	end
