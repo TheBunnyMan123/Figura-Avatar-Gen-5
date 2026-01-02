@@ -61,7 +61,7 @@ click:setOnPress(function()
 	end)
 	local block, blockpos = raycast:block(eyePos, eyePos + player:getLookDir() * 190)
 
-	if block then
+	if block and target then
 		local entLength = (hitpos - eyePos):length()
 		local blkLength = (blockpos - eyePos):length()
 
