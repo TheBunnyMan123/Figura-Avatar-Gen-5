@@ -76,7 +76,6 @@ end
 
 local tick = 0
 local line = require("libs.TheKillerBunny.BunnyLineLib")
-print(getmetatable(line).__index)
 function events.TICK()
 	if not moved_uuid then return end
 	if not func then return end
@@ -98,7 +97,8 @@ function events.TICK()
 				vec(1, 1, 1), 10, 1)
 		end
 
-		line.box(center - halfBox - vec(0.1, 0.1, 0.1), center + halfBox + vec(0.1, 0.1, 0.1), 10, 1.5)
+		--line.box(center - halfBox - vec(0.1, 0.1, 0.1), center + halfBox + vec(0.1, 0.1, 0.1), 10, 1.5)
+		line.box(center - halfBox, center + halfBox), 10, 1.5)
 	end
 
 	if not success then
