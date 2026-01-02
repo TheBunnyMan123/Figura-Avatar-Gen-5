@@ -79,6 +79,9 @@ end
 
 local tick = 0
 local line = require("libs.TheKillerBunny.BunnyLineLib")
+local center
+local halfBox
+local eye
 function events.TICK()
 	if not moved_uuid then return end
 
@@ -86,14 +89,9 @@ function events.TICK()
 	if not ent then return end
 
 
-	local center = ent:getPos():add(0, ent:getBoundingBox().y / 2)
-	local halfBox = ent:getBoundingBox():div(2, 2, 2)
-	local eye = player:getPos():add(0, player:getEyeHeight())
-	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
-	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
-	if not success then
-		movelib.runCI(moved_uuid, "SetVelocity", vel)
-	end
+	center = ent:getPos():add(0, ent:getBoundingBox().y / 2)
+	halfBox = ent:getBoundingBox():div(2, 2, 2)
+	eye = player:getPos():add(0, player:getEyeHeight())
 
 	tick = tick + 1
 	if tick % 5 == 0 then
@@ -103,6 +101,15 @@ function events.TICK()
 		end
 
 		line.box(center - halfBox, center + halfBox, 10, 1.5)
+	end
+end
+
+function events.WORLD_RENDER()
+	if not player:isLoaded() or not center or not eye or not halfBox or not moved_uuid then return end
+	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
+	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
+	if not success then
+		movelib.runCI(moved_uuid, "SetVelocity", vel)
 	end
 end
 
