@@ -97,7 +97,7 @@ function events.TICK()
 	if tick % 5 == 0 then
 		if not host:isHost() then
 			line.line(eye:copy(), center:copy(), math.round((center - eye):length() * 1.5),
-				vec(1, 1, 1), 3, 1)
+				vec(1, 1, 1), 10, 1)
 		end
 
 		line.box(center - halfBox, center + halfBox, 10, 1.5)
