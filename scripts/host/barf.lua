@@ -17,8 +17,10 @@ function events.TICK()
 			entity = "minecraft:fire"
 		end
 
+		if entity:match("tnt") then return end
+
 		local block = pcall(world.newBlock, entity)
-		if entity ~= "minecraft:tnt" and block then
+		if entity ~= "minecraft:tnt" and entity ~= "minecraft:air" and block then
 			command = string.format("summon falling_block %f %f %f {BlockState:{Name:\"%s\"},Time:1,Motion:[%fd,%fd,%fd],HurtEntities:%s}",
 				pos.x, pos.y, pos.z, entity, dir.x, dir.y, dir.z, entity:match("anvil") and "true" or "false")
 		elseif entity == "minecraft:fire_charge" then
