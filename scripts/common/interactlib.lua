@@ -18,7 +18,7 @@ page:newAction():setTitle("Back"):setItem("arrow")
 
 page:newAction():setTitle("Velocity Limit [10]"):setItem("feather")
 	:setOnScroll(function(dir, self)
-		int.config.speedLimit = int.config.speedLimit + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 10 or 1)
+		int.config.speedLimit = int.config.speedLimit + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 3 or 1)
 		self:setTitle(string.format("Velocity Limit [%d]", int.config.speedLimit))
 	end)
 page:newAction():setTitle("Disabled"):setItem("lever"):setOnToggle(function(enabled, self)
@@ -30,10 +30,10 @@ local click = keybinds:newKeybind("move", "key.mouse.left")
 local throw = keybinds:newKeybind("throw", "key.mouse.right")
 local movelib = require("libs.playerInt.picker")
 
-local throw_strength = 10
-page:newAction():setTitle("Throw Strength [10]"):setItem("firework_rocket")
+local throw_strength = 3
+page:newAction():setTitle("Throw Strength [3]"):setItem("firework_rocket")
 	:setOnScroll(function(dir, self)
-		throw_strength = throw_strength + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 10 or 1)
+		throw_strength = throw_strength + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 3 or 1)
 		self:setTitle(string.format("Throw Strength [%d]", throw_strength))
 	end)
 
@@ -56,7 +56,7 @@ end
 click:setOnPress(function()
 	if not action:isToggled() then return end
 	local eyePos = player:getPos():add(0, player:getEyeHeight())
-	local target, hitpos = raycast:entity(eyePos, eyePos + player:getLookDir() * 100, function(ent)
+	local target, hitpos = raycast:entity(eyePos, eyePos + player:getLookDir() * 30, function(ent)
 		return ent ~= player
 	end)
 	if target then
@@ -97,15 +97,15 @@ function events.TICK()
 	if tick % 5 == 0 then
 		if not host:isHost() then
 			line.line(eye:copy(), center:copy(), math.round((center - eye):length() * 1.5),
-				vec(1, 1, 1), 10, 1)
+				vec(1, 1, 1), 3, 1)
 		end
 
 		line.box(center - halfBox, center + halfBox, 10, 1.5)
 	end
 end
 
-function events.WORLD_RENDER()
-	if not player:isLoaded() or not center or not eye or not halfBox or not moved_uuid then return end
+function events.RENDER()
+	if not center or not moved_uuid then return end
 	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
 	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
 	if not success then
