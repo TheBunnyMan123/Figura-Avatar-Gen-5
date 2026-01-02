@@ -75,8 +75,8 @@ function events.TICK()
 	end
 
 	if slamming then
-		if player:isOnGround() then
-			particles("slam", player:getPos(), (math.abs(slamming) - 2) * 0.75 + 1.75)
+		if player:isOnGround() and slamming >= 1 then
+			particles("slam", player:getPos(), (math.abs(math.min(slamming, 7)) - 2) * 0.75 + 1.75)
 			slamming = false
 		end
 	end
