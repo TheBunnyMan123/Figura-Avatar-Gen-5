@@ -97,8 +97,7 @@ function events.TICK()
 				vec(1, 1, 1), 10, 1)
 		end
 
-		--line.box(center - halfBox - vec(0.1, 0.1, 0.1), center + halfBox + vec(0.1, 0.1, 0.1), 10, 1.5)
-		line.box(center - halfBox, center + halfBox), 10, 1.5)
+		line.box(center - halfBox, center + halfBox, 10, 1.5)
 	end
 
 	if not success then
