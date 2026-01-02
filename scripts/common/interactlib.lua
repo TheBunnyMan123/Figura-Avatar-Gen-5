@@ -42,7 +42,10 @@ local movement_distance = 5
 local func
 function pings.movement_info(uuid, distance)
 	if not uuid and distance and moved_uuid and player then
-		movelib.runFunc(moved_uuid, "setVel", player:getLookDir() * distance)
+		local success = movelib.runFunc(moved_uuid, "setVel", player:getLookDir() * distance)
+		if not success then
+			movelib.runCI(moved_uuid, "SetVelocity", player:getLookDir() * distance)
+		end
 	end
 
 	moved_uuid = uuid
@@ -78,7 +81,6 @@ local tick = 0
 local line = require("libs.TheKillerBunny.BunnyLineLib")
 function events.TICK()
 	if not moved_uuid then return end
-	if not func then return end
 
 	local ent = world.getEntity(moved_uuid)
 	if not ent then return end
@@ -89,6 +91,9 @@ function events.TICK()
 	local eye = player:getPos():add(0, player:getEyeHeight())
 	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
 	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
+	if not success then
+		movelib.runCI(moved_uuid, "SetVelocity", vel)
+	end
 
 	tick = tick + 1
 	if tick % 5 == 0 then
@@ -98,11 +103,6 @@ function events.TICK()
 		end
 
 		line.box(center - halfBox, center + halfBox, 10, 1.5)
-	end
-
-	if not success then
-		pings.movement_info(nil)
-		print(error)
 	end
 end
 
