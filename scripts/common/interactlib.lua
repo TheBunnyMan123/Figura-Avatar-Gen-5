@@ -89,38 +89,81 @@ function events.MOUSE_SCROLL(dir)
 end
 
 local tick = 0
-local line = require("libs.TheKillerBunny.BunnyLineLib")
+local line = require("libs.GNamimates.line")
+local width = 0.025
+local lines = {
+	upper_north = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	lower_north = line.new():setColor(1, 0, 0):setWidth(width):update(),
+	upper_south = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	lower_south = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	upper_east = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	lower_east = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	upper_west = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	lower_west = line.new():setColor(0, 0, 1):setWidth(width):update(),
+	north_west = line.new():setColor(0, 1, 0):setWidth(width):update(),
+	north_east = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	south_west = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	south_east = line.new():setColor(1, 1, 1):setWidth(width):update(),
+	follow = line.new():setColor(1, 1, 1):setWidth(width):update()
+}
 local center
 local halfBox
 local eye
 function events.TICK()
-	if not moved_uuid then return end
-
-	local ent = world.getEntity(moved_uuid)
-	if not ent then return end
-
-
-	center = ent:getPos():add(0, ent:getBoundingBox().y / 2)
-	halfBox = ent:getBoundingBox():div(2, 2, 2)
-	eye = player:getPos():add(0, player:getEyeHeight())
-
-	tick = tick + 1
-	if tick % 5 == 0 then
-		if not host:isHost() then
-			line.line(eye:copy(), center:copy(), math.round((center - eye):length() * 1.5),
-				vec(1, 1, 1), 10, 1)
+	if not center then return end
+	if not moved_uuid then
+		if lines.north_west.visible then
+			for _, v in pairs(lines) do
+				v:setVisible(false)
+			end
 		end
+		
+		return
+	end
 
-		line.box(center - halfBox, center + halfBox, 10, 1.5)
+	if not lines.north_west.visible then
+		for _, v in pairs(lines) do
+			v:setVisible(true)
+		end
 	end
 end
 
-function events.RENDER()
-	if not center or not moved_uuid then return end
-	local vel = eye:copy():add(player:getLookDir() * movement_distance) - center
-	local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
-	if not success then
-		movelib.runCI(moved_uuid, "SetVelocity", vel)
+function events.RENDER(delta)
+	if not moved_uuid then return end
+	local ent = world.getEntity(moved_uuid)
+	if not ent then return end
+
+	center = ent:getPos(delta):add(0, ent:getBoundingBox().y / 2)
+	halfBox = ent:getBoundingBox():div(2, 2, 2)
+	eye = player:getPos(delta):add(0, player:getEyeHeight())
+	local target = eye + player:getLookDir(delta) * movement_distance - vec(0, halfBox.y, 0)
+	
+	local isPlayer = ent:isPlayer()
+	if isPlayer then
+		local vel = target:copy():sub(center):add(0, halfBox.y)
+		local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
+		if not success then
+			movelib.runCI(moved_uuid, "SetVelocity", vel)
+		end
+	elseif player:getPermissionLevel() >= 2 then
+		host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y, target.z))
 	end
+	
+	local min = center - halfBox
+	local max = center + halfBox
+
+	lines.upper_north:setA(min.x, max.y, min.z):setB(max.x, max.y, min.z):immediateUpdate()
+	lines.lower_north:setA(min.x, min.y, min.z):setB(max.x, min.y, min.z):immediateUpdate()
+	lines.upper_south:setA(min.x, max.y, max.z):setB(max.x, max.y, max.z):immediateUpdate()
+	lines.lower_south:setA(min.x, min.y, max.z):setB(max.x, min.y, max.z):immediateUpdate()
+	lines.upper_east:setA(max.x, max.y, min.z):setB(max.x, max.y, max.z):immediateUpdate()
+	lines.lower_east:setA(max.x, min.y, min.z):setB(max.x, min.y, max.z):immediateUpdate()
+	lines.upper_west:setA(min.x, max.y, min.z):setB(min.x, max.y, max.z):immediateUpdate()
+	lines.lower_west:setA(min.x, min.y, min.z):setB(min.x, min.y, max.z):immediateUpdate()
+	lines.north_west:setA(min.x, min.y, min.z):setB(min.x, max.y, min.z):immediateUpdate()
+	lines.north_east:setA(max.x, min.y, min.z):setB(max.x, max.y, min.z):immediateUpdate()
+	lines.south_west:setA(min.x, min.y, max.z):setB(min.x, max.y, max.z):immediateUpdate()
+	lines.south_east:setA(max.x, min.y, max.z):setB(max.x, max.y, max.z):immediateUpdate()
+	lines.follow:setA(eye):setB(center):immediateUpdate()
 end
 
