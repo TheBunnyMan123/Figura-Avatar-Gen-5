@@ -104,7 +104,7 @@ for i = 1, #name do
 		task = holder:newText("task" .. i):setText(toJson {
 			text = name[i],
 			color = "#32FF96"
-		}):setOutline(true):setPos(-width, 0):setScale(3/8):setLight(15),
+		}):setPos(-width, 0):setScale(3/8):setLight(15):setOutline(true),
 		offset = i,
 		prevWidth = width
 	}
@@ -129,10 +129,8 @@ for i = 1, #backGradient do
 	gradient[#gradient + 1] = backGradient[i] / 255
 end
 
-function events.TICK()
-	tick = tick + 1
-
-	avatar:store("color", gradient[(tick % #gradient) + 1])
+function events.WORLD_TICK()
+	if player:isLoaded() then return end
 	local json = {}
 	for k, v in ipairs(entityTasks) do
 		local col = gradient[((tick + k) % #gradient) + 1]
@@ -148,9 +146,30 @@ function events.TICK()
 				value = hover
 			}
 		}
+		json[#json + 1] = text
+	end
+	nameplate.ALL:setText(toJson(json))
+end
+
+function events.TICK()
+	tick = tick + 1
+
+	avatar:store("color", gradient[(tick % #gradient) + 1])
+	local json = {}
+	for k, v in ipairs(entityTasks) do
+		local col = gradient[((tick + k) % #gradient) + 1]
+		local text = {
+			text = v.char,
+			color = "#" .. vectors.rgbToHex(col),
+		}
 		v.task:setText(toJson(text)):setOutlineColor(col / 5)
 			:setSeeThrough(not player:isSneaking())
 		json[#json + 1] = text
+		json[#json].hoverEvent = {
+			action = "show_text",
+			value = hover
+		}
+		json[#json].hover_event = json[#json].hoverEvent
 	end
 	nameplate.ALL:setText(toJson(json))
 end
@@ -164,4 +183,3 @@ function events.RENDER(delta)
 		)):setVisible(not player:isInvisible() and client.isHudEnabled())
 	end
 end
-

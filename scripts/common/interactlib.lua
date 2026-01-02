@@ -72,6 +72,7 @@ click:setOnPress(function()
 
 	if target then
 		pings.movement_info(target:getUUID(), math.abs((player:getPos() - target:getPos()):length()))
+		return true
 	end
 end)
 click:setOnRelease(function()
@@ -149,6 +150,11 @@ function events.RENDER(delta)
 		host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y, target.z))
 	end
 	
+	local var = ent:getVariable() or {}
+	if not var.movement and not var.MovementAPI and isPlayer then
+		pings.movement_info(nil)
+	end
+
 	local min = center - halfBox
 	local max = center + halfBox
 
