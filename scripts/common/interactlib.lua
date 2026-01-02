@@ -27,6 +27,7 @@ end):setToggleTitle("Enabled")
 
 local action = page:newAction():setTitle("Player Mover [RMB to throw]"):setItem("fishing_rod"):setOnToggle(function() end)
 local click = keybinds:newKeybind("move", "key.mouse.left")
+local lock = keybinds:newKeybind("lock", "key.mouse.middle")
 local throw = keybinds:newKeybind("throw", "key.mouse.right")
 local movelib = require("libs.playerInt.picker")
 
@@ -40,6 +41,14 @@ page:newAction():setTitle("Throw Strength [3]"):setItem("firework_rocket")
 local moved_uuid
 local movement_distance = 5
 local func
+
+local locked = {}
+
+function pings.lock(uuid, pos)
+	locked[uuid] = pos
+	moved_uuid = nil
+end
+
 function pings.movement_info(uuid, distance)
 	if not uuid and distance and moved_uuid and player then
 		local success = movelib.runFunc(moved_uuid, "setVel", player:getLookDir() * distance)
@@ -47,6 +56,8 @@ function pings.movement_info(uuid, distance)
 			movelib.runCI(moved_uuid, "SetVelocity", player:getLookDir() * distance)
 		end
 	end
+
+	locked[uuid or ""] = nil
 
 	moved_uuid = uuid
 	movement_distance = distance
@@ -78,7 +89,11 @@ end)
 click:setOnRelease(function()
 	pings.movement_info(nil)
 end)
-
+lock:setOnPress(function()
+	local ent = world.getEntity(moved_uuid)
+	if not ent:isLoaded() then return end
+	pings.lock(moved_uuid, ent:getPos():add(0, ent:getBoundingBox().y / 2))
+end)
 throw:setOnPress(function()
 	if not moved_uuid then return end
 	pings.movement_info(nil, throw_strength)
@@ -130,6 +145,30 @@ function events.TICK()
 end
 
 function events.RENDER(delta)
+	local viewer = client.getViewer()
+	if viewer:isLoaded() then
+		local uuid = viewer:getUUID()
+		if locked[uuid] then
+			local vel = locked[uuid] - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
+
+			local success, error = movelib.runFunc(uuid, "setVel", vel)
+			if not success then
+				movelib.runCI(uuid, "SetVelocity", vel)
+			end
+		end
+	end
+
+	if player:getPermissionLevel() > 1 then
+		for uuid, target in pairs(locked) do
+			if uuid then
+				local ent = world.getEntity(uuid)
+				if not ent:isPlayer() then
+					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
+				end
+			end
+		end
+	end
+
 	if not moved_uuid then return end
 	local ent = world.getEntity(moved_uuid)
 	if not ent then return end
@@ -146,7 +185,7 @@ function events.RENDER(delta)
 		if not success then
 			movelib.runCI(moved_uuid, "SetVelocity", vel)
 		end
-	elseif player:getPermissionLevel() >= 2 then
+	elseif player:getPermissionLevel() > 1 then
 		host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y, target.z))
 	end
 	
