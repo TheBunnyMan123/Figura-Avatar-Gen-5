@@ -169,6 +169,19 @@ function events.TICK()
 	end
 end
 
+function events.WORLD_TICK()
+	for k, v in pairs(locked) do
+		if v then
+			local ent = world.getEntity(k)
+			if not ent then locked[k][2]:remove(); locked[k] = nil; goto continue end
+			if not ent:isLoaded() then locked[k][2]:remove(); locked[k] = nil; goto continue end
+			if (ent.getHealth and ent:getHealth() < 0) then locked[k][2]:remove(); locked[k] = nil; goto continue end
+			
+			::continue::
+		end
+	end
+end
+
 function events.RENDER(delta)
 	local viewer = client.getViewer()
 	local lockRot = math.lerp(tick - 1, tick, delta) * 5
@@ -189,7 +202,7 @@ function events.RENDER(delta)
 		for uuid, info in pairs(locked) do
 			if uuid then
 				local ent = world.getEntity(uuid)
-				if not ent then locked[uuid] = nil; return end
+				if not ent then locked[uuid][2]:remove(); locked[uuid] = nil; return end
 				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid][2]:remove(); locked[uuid] = nil; break end
 				
 				local target = info[1]

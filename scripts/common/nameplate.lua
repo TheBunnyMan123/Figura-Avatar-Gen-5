@@ -129,27 +129,24 @@ for i = 1, #backGradient do
 	gradient[#gradient + 1] = backGradient[i] / 255
 end
 
-function events.WORLD_TICK()
-	if player:isLoaded() then return end
-	local json = {}
-	for k, v in ipairs(entityTasks) do
-		local col = gradient[((tick + k) % #gradient) + 1]
-		local text = {
-			text = v.char,
-			color = "#" .. vectors.rgbToHex(col),
-			hoverEvent = {
-				action = "show_text",
-				value = hover
-			},
-			hover_event = {
-				action = "show_text",
-				value = hover
-			}
+local json = {}
+for k, v in ipairs(entityTasks) do
+	local col = gradient[((tick + k) % #gradient) + 1]
+	local text = {
+		text = v.char,
+		color = "#" .. vectors.rgbToHex(col),
+		hoverEvent = {
+			action = "show_text",
+			value = hover
+		},
+		hover_event = {
+			action = "show_text",
+			value = hover
 		}
-		json[#json + 1] = text
-	end
-	nameplate.ALL:setText(toJson(json))
+	}
+	json[#json + 1] = text
 end
+nameplate.ALL:setText(toJson(json))
 
 function events.TICK()
 	tick = tick + 1
