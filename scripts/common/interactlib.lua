@@ -164,7 +164,7 @@ function events.RENDER(delta)
 			if uuid then
 				local ent = world.getEntity(uuid)
 				if not ent then locked[uuid] = nil; return end
-				if not ent:isLoaded() or ent:getHealth() <= 0 then locked[uuid] = nil; break end
+				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid] = nil; break end
 				if not ent:isPlayer() then
 					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
 				end
