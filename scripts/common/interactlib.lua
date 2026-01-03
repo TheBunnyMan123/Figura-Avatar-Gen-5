@@ -55,10 +55,23 @@ end
 
 function pings.movement_info(uuid, distance)
 	if not uuid and distance and moved_uuid and player then
+		local ent = world.getEntity(moved_uuid)
+
+		if ent then
+			local vel = player:getLookDir() * distance
+			if not ent:isPlayer() then
+				host:sendChatCommand(string.format("data merge entity %s {Motion:[%fd,%fd,%fd]}",
+					moved_uuid, vel.x, vel.y, vel.z))
+				
+				goto done
+			end
+		end
+
 		local success = movelib.runFunc(moved_uuid, "setVel", player:getLookDir() * distance)
 		if not success then
 			movelib.runCI(moved_uuid, "SetVelocity", player:getLookDir() * distance)
 		end
+		::done::
 	end
 
 	if uuid and locked[uuid] then
@@ -101,10 +114,12 @@ lock:setOnPress(function()
 	local ent = world.getEntity(moved_uuid)
 	if not ent:isLoaded() then return end
 	pings.lock(moved_uuid, ent:getPos():add(0, ent:getBoundingBox().y / 2))
+	return true
 end)
 throw:setOnPress(function()
 	if not moved_uuid then return end
 	pings.movement_info(nil, throw_strength)
+	return true
 end)
 
 function events.MOUSE_SCROLL(dir)
@@ -162,8 +177,6 @@ function events.RENDER(delta)
 		local uuid = viewer:getUUID()
 		if locked[uuid] then
 			local vel = locked[uuid][1] - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
-			info[2]:setPos((viewer:getPos(delta) + vec(0, viewer:getBoundingBox().y * 0.9 + lockHoverPos, 0)) * 16)
-				:setRot(0, lockRot)
 
 			local success, error = movelib.runFunc(uuid, "setVel", vel)
 			if not success then
@@ -178,10 +191,12 @@ function events.RENDER(delta)
 				local ent = world.getEntity(uuid)
 				if not ent then locked[uuid] = nil; return end
 				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid][2]:remove(); locked[uuid] = nil; break end
+				
+				local target = info[1]
+				info[2]:setPos((target + vec(0, ent:getBoundingBox().y * (ent:isPlayer() and 1.1 or 0.85) + lockHoverPos, 0)) * 16)
+					:setRot(0, lockRot)
+				
 				if not ent:isPlayer() then
-					local target = info[1]
-					info[2]:setPos((target + vec(0, ent:getBoundingBox().y * 0.9 + lockHoverPos, 0)) * 16)
-						:setRot(0, lockRot)
 					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
 				end
 			end
