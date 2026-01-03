@@ -1,3 +1,4 @@
+if true then return end
 local model = models:newPart("boat", "None")
 model:newEntity("villager")
    :setNbt(toJson {
