@@ -1,6 +1,8 @@
 local ctrl = keybinds:newKeybind("ctrl", "key.keyboard.left.control")
 local shift = keybinds:newKeybind("shift", "key.keyboard.left.shift")
 
+local lock_mdl = models.models.padlock.bone:setParentType("WORLD"):setVisible(false)
+
 local int = require("libs.playerInt.setup")
 int.funcs.immune = true
 int.config.speedLimit = 10
@@ -43,10 +45,12 @@ local movement_distance = 5
 local func
 
 local locked = {}
-
+local lockHolder = models:newPart("PADLOCK_HOLDER")
 function pings.lock(uuid, pos)
-	locked[uuid] = pos
+	locked[uuid] = {pos, lock_mdl:copy(uuid):setVisible(true)}
 	moved_uuid = nil
+
+	lockHolder:addChild(locked[uuid][2])
 end
 
 function pings.movement_info(uuid, distance)
@@ -57,6 +61,9 @@ function pings.movement_info(uuid, distance)
 		end
 	end
 
+	if uuid and locked[uuid] then
+		locked[uuid][2]:remove()
+	end
 	locked[uuid or ""] = nil
 
 	moved_uuid = uuid
@@ -126,7 +133,9 @@ local lines = {
 local center
 local halfBox
 local eye
+local tick = 0
 function events.TICK()
+	tick = tick + 1
 	if not center then return end
 	if not moved_uuid then
 		if lines.north_west.visible then
@@ -147,10 +156,14 @@ end
 
 function events.RENDER(delta)
 	local viewer = client.getViewer()
+	local lockRot = math.lerp(tick - 1, tick, delta) * 5
+	local lockHoverPos = math.sin(math.lerp(tick - 1, tick, delta) / 10) / 5
 	if viewer:isLoaded() then
 		local uuid = viewer:getUUID()
 		if locked[uuid] then
-			local vel = locked[uuid] - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
+			local vel = locked[uuid][1] - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
+			info[2]:setPos((viewer:getPos(delta) + vec(0, viewer:getBoundingBox().y * 0.9 + lockHoverPos, 0)) * 16)
+				:setRot(0, lockRot)
 
 			local success, error = movelib.runFunc(uuid, "setVel", vel)
 			if not success then
@@ -159,13 +172,16 @@ function events.RENDER(delta)
 		end
 	end
 
-	if player:getPermissionLevel() > 1 then
-		for uuid, target in pairs(locked) do
+	if player:getPermissionLevel() > 1 or not host:isHost() then
+		for uuid, info in pairs(locked) do
 			if uuid then
 				local ent = world.getEntity(uuid)
 				if not ent then locked[uuid] = nil; return end
-				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid] = nil; break end
+				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid][2]:remove(); locked[uuid] = nil; break end
 				if not ent:isPlayer() then
+					local target = info[1]
+					info[2]:setPos((target + vec(0, ent:getBoundingBox().y * 0.9 + lockHoverPos, 0)) * 16)
+						:setRot(0, lockRot)
 					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
 				end
 			end
