@@ -25,10 +25,10 @@ page:newAction():setTitle("Disabled"):setItem("lever"):setOnToggle(function(enab
 	int.funcs.immune = not enabled
 end):setToggleTitle("Enabled")
 
-local action = page:newAction():setTitle("Player Mover [RMB to throw]"):setItem("fishing_rod"):setOnToggle(function() end)
-local click = keybinds:newKeybind("move", "key.mouse.left")
-local lock = keybinds:newKeybind("lock", "key.mouse.middle")
-local throw = keybinds:newKeybind("throw", "key.mouse.right")
+local action = page:newAction():setTitle("Player Mover [RMB to throw, MMB to lock]"):setItem("fishing_rod"):setOnToggle(function() end)
+local click = keybinds:newKeybind("move", "key.mouse.left", false)
+local lock = keybinds:newKeybind("lock", "key.mouse.middle", false)
+local throw = keybinds:newKeybind("throw", "key.mouse.right", false)
 local movelib = require("libs.playerInt.picker")
 
 local throw_strength = 3
@@ -90,6 +90,7 @@ click:setOnRelease(function()
 	pings.movement_info(nil)
 end)
 lock:setOnPress(function()
+	if not moved_uuid then return end
 	local ent = world.getEntity(moved_uuid)
 	if not ent:isLoaded() then return end
 	pings.lock(moved_uuid, ent:getPos():add(0, ent:getBoundingBox().y / 2))
@@ -162,6 +163,8 @@ function events.RENDER(delta)
 		for uuid, target in pairs(locked) do
 			if uuid then
 				local ent = world.getEntity(uuid)
+				if not ent then locked[uuid] = nil; return end
+				if not ent:isLoaded() or ent:getHealth() <= 0 then locked[uuid] = nil; break end
 				if not ent:isPlayer() then
 					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
 				end
