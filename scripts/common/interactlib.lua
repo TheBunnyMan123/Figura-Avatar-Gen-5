@@ -198,20 +198,18 @@ function events.RENDER(delta)
 		end
 	end
 
-	if player:getPermissionLevel() > 1 or not host:isHost() then
-		for uuid, info in pairs(locked) do
-			if uuid then
-				local ent = world.getEntity(uuid)
-				if not ent then locked[uuid][2]:remove(); locked[uuid] = nil; return end
-				if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid][2]:remove(); locked[uuid] = nil; break end
-				
-				local target = info[1]
-				info[2]:setPos((target + vec(0, ent:getBoundingBox().y * (ent:isPlayer() and 1.1 or 0.85) + lockHoverPos, 0)) * 16)
-					:setRot(0, lockRot)
-				
-				if not ent:isPlayer() then
-					host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
-				end
+	for uuid, info in pairs(locked) do
+		if uuid then
+			local ent = world.getEntity(uuid)
+			if not ent then locked[uuid][2]:remove(); locked[uuid] = nil; return end
+			if not ent:isLoaded() or (ent.getHealth and ent:getHealth() <= 0) then locked[uuid][2]:remove(); locked[uuid] = nil; break end
+
+			local target = info[1]
+			info[2]:setPos((target + vec(0, ent:getBoundingBox().y * (ent:isPlayer() and 1.1 or 0.85) + lockHoverPos, 0)) * 16)
+			:setRot(0, lockRot)
+
+			if not ent:isPlayer() and player:getPermissionLevel() > 1 then
+				host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
 			end
 		end
 	end
