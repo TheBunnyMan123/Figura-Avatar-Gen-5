@@ -54,7 +54,7 @@ function pings.lock(uuid, pos)
 end
 
 function pings.movement_info(uuid, distance)
-	if not uuid and distance and moved_uuid and player then
+	if not uuid and distance and moved_uuid and player:isLoaded() then
 		local ent = world.getEntity(moved_uuid)
 
 		if ent then
