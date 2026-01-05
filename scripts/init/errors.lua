@@ -130,6 +130,8 @@ function events.ERROR(err)
 
 	local toPrint = toJson(newError)
 	printJson(toPrint)
+
+	if not goofy then return false end
 	goofy:stopAvatar(toPrint)
 	return true
 end

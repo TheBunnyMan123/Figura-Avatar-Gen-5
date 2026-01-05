@@ -9,16 +9,12 @@
 
 local lib = {
   config = {
-    speedLimit = 1000, -- Clamps all velocity functions to a max of this value, set to nil to disable
+    speedLimit = 0, -- Clamps all velocity functions to a max of this value, set to nil to disable
     api = goofy -- Where to pull movement functions from, each module has a list of required functions from the plugin
   },
-  funcs = {immune=false},
+  funcs = {immune=true},
   host = host:isHost()
 }
-
-avatar:store("movement", lib.funcs)
-
-
 
 ---Adds a new function to the list, meaning anyone can run it
 ---@param name string

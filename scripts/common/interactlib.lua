@@ -3,9 +3,16 @@ local shift = keybinds:newKeybind("shift", "key.keyboard.left.shift")
 
 local lock_mdl = models.models.padlock.bone:setParentType("WORLD"):setVisible(false)
 
-local int = require("libs.playerInt.setup")
-int.funcs.immune = true
-int.config.speedLimit = 10
+local lift = require("libs.Bitslayn.lift")
+lift.config.maxPos = 10
+lift.config.maxVel = 10
+lift.config.whitelist = {
+	Bitslayn = true,
+	BitslaynAlt = true,
+	Just_Ghasty = true,
+	APeacefulRabbit = true,
+	TheKillerBunny = true
+}
 
 local page = action_wheel:newPage("interaction")
 wheel:newAction():setTitle("Interaction Lib"):setItem("player_head")
@@ -20,18 +27,19 @@ page:newAction():setTitle("Back"):setItem("arrow")
 
 page:newAction():setTitle("Velocity Limit [10]"):setItem("feather")
 	:setOnScroll(function(dir, self)
-		int.config.speedLimit = int.config.speedLimit + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 3 or 1)
-		self:setTitle(string.format("Velocity Limit [%d]", int.config.speedLimit))
+		lift.config.maxVel = lift.config.maxVel + ((dir > 0) and 1 or -1) * (ctrl:isPressed() and 5 or 1) * (shift:isPressed() and 3 or 1)
+		lift.config.maxPos = lift.config.maxVel
+		self:setTitle(string.format("Velocity Limit [%d]", lift.config.maxVel))
 	end)
 page:newAction():setTitle("Disabled"):setItem("lever"):setOnToggle(function(enabled, self)
-	int.funcs.immune = not enabled
+	lift.config.enabled = enabled
 end):setToggleTitle("Enabled")
 
 local action = page:newAction():setTitle("Player Mover [RMB to throw, MMB to lock]"):setItem("fishing_rod"):setOnToggle(function() end)
 local click = keybinds:newKeybind("move", "key.mouse.left", false)
 local lock = keybinds:newKeybind("lock", "key.mouse.middle", false)
 local throw = keybinds:newKeybind("throw", "key.mouse.right", false)
-local movelib = require("libs.playerInt.picker")
+local movelib_legacy = require("libs.playerInt.picker")
 
 local throw_strength = 3
 page:newAction():setTitle("Throw Strength [3]"):setItem("firework_rocket")
@@ -46,11 +54,44 @@ local func
 
 local locked = {}
 local lockHolder = models:newPart("PADLOCK_HOLDER")
-function pings.lock(uuid, pos)
-	locked[uuid] = {pos, lock_mdl:copy(uuid):setVisible(true)}
+function pings.lock(uuid, target_pos)
+	locked[uuid] = {target_pos, lock_mdl:copy(uuid):setVisible(true)}
 	moved_uuid = nil
 
 	lockHolder:addChild(locked[uuid][2])
+end
+
+local function set_position(uuid, target_pos)
+	local viewer = client.getViewer()
+
+	if viewer:isLoaded() then
+		target_pos = target_pos - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
+		if viewer:getUUID() == uuid then
+			lift:setVel(target_pos)
+		end
+	else
+		return
+	end
+
+	local success = movelib_legacy.runFunc(uuid, "setVel", target_pos)
+	if not success then
+		movelib_legacy.runCI(uuid, "SetVelocity", target_pos)
+	end
+end
+
+local function set_velocity(uuid, vel)
+	local viewer = client.getViewer()
+
+	if viewer:isLoaded() then
+		if viewer:getUUID() == uuid then
+			lift:setVel(vel)
+		end
+	end
+
+	local success = movelib_legacy.runFunc(uuid, "setVel", vel)
+	if not success then
+		movelib_legacy.runCI(uuid, "SetVelocity", vel)
+	end
 end
 
 function pings.movement_info(uuid, distance)
@@ -64,13 +105,11 @@ function pings.movement_info(uuid, distance)
 					moved_uuid, vel.x, vel.y, vel.z))
 				
 				goto done
-			end
+			else
+				set_velocity(moved_uuid, vel)
+			end	
 		end
 
-		local success = movelib.runFunc(moved_uuid, "setVel", player:getLookDir() * distance)
-		if not success then
-			movelib.runCI(moved_uuid, "SetVelocity", player:getLookDir() * distance)
-		end
 		::done::
 	end
 
@@ -81,7 +120,6 @@ function pings.movement_info(uuid, distance)
 
 	moved_uuid = uuid
 	movement_distance = distance
-	func = movelib.getFunc(uuid)
 end
 
 click:setOnPress(function()
@@ -113,7 +151,7 @@ lock:setOnPress(function()
 	if not moved_uuid then return end
 	local ent = world.getEntity(moved_uuid)
 	if not ent:isLoaded() then return end
-	pings.lock(moved_uuid, ent:getPos():add(0, ent:getBoundingBox().y / 2))
+	pings.lock(moved_uuid, ent:getPos():add(0, ent:getBoundingBox().y / 2, 0))
 	return true
 end)
 throw:setOnPress(function()
@@ -145,13 +183,13 @@ local lines = {
 	south_east = line.new():setColor(1, 1, 1):setWidth(width):update(),
 	follow = line.new():setColor(1, 1, 1):setWidth(width):update()
 }
-local center
+local ent_pos
 local halfBox
 local eye
 local tick = 0
 function events.TICK()
 	tick = tick + 1
-	if not center then return end
+	if not ent_pos then return end
 	if not moved_uuid then
 		if lines.north_west.visible then
 			for _, v in pairs(lines) do
@@ -189,12 +227,7 @@ function events.RENDER(delta)
 	if viewer:isLoaded() then
 		local uuid = viewer:getUUID()
 		if locked[uuid] then
-			local vel = locked[uuid][1] - viewer:getPos():add(0, viewer:getBoundingBox().y / 2)
-
-			local success, error = movelib.runFunc(uuid, "setVel", vel)
-			if not success then
-				movelib.runCI(uuid, "SetVelocity", vel)
-			end
+			set_position(uuid, locked[uuid][1])
 		end
 	end
 
@@ -206,7 +239,7 @@ function events.RENDER(delta)
 
 			local target = info[1]
 			info[2]:setPos((target + vec(0, ent:getBoundingBox().y * (ent:isPlayer() and 1.1 or 0.85) + lockHoverPos, 0)) * 16)
-			:setRot(0, lockRot)
+				:setRot(0, lockRot)
 
 			if not ent:isPlayer() and player:getPermissionLevel() > 1 then
 				host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y - ent:getBoundingBox().y / 2, target.z))
@@ -218,24 +251,21 @@ function events.RENDER(delta)
 	local ent = world.getEntity(moved_uuid)
 	if not ent then return end
 
-	center = ent:getPos(delta):add(0, ent:getBoundingBox().y / 2)
+	ent_pos = ent:getPos(delta)
 	halfBox = ent:getBoundingBox():div(2, 2, 2)
 	eye = player:getPos(delta):add(0, player:getEyeHeight())
-	local target = eye + player:getLookDir(delta) * movement_distance - vec(0, halfBox.y, 0)
+	local center = ent_pos + vec(0, halfBox.y, 0)
+	local target = eye + player:getLookDir(delta) * movement_distance
 	
 	local isPlayer = ent:isPlayer()
 	if isPlayer then
-		local vel = target:copy():sub(center):add(0, halfBox.y)
-		local success, error = movelib.runFunc(moved_uuid, "setVel", vel)
-		if not success then
-			movelib.runCI(moved_uuid, "SetVelocity", vel)
-		end
+		set_position(moved_uuid, target)
 	elseif player:getPermissionLevel() > 1 then
 		host:sendChatCommand(string.format("tp %s %f %f %f", ent:getUUID(), target.x, target.y, target.z))
 	end
 	
 	local var = ent:getVariable() or {}
-	if not var.movement and not var.MovementAPI and isPlayer then
+	if not var.FOXLift and not var.movement and not var.MovementAPI and isPlayer then
 		pings.movement_info(nil)
 	end
 

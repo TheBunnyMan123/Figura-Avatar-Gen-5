@@ -18,6 +18,9 @@ commands = {
 	end,
 	testzone = function(full)
 		host:sendChatCommand("tp @s 123980 65 198872 0 0")
+	end,
+	orbitallaser = function(full)
+		host:sendChatCommand("tp @s 12783 155 1322 180 0")
 	end
 }
 
