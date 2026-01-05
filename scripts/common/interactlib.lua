@@ -4,6 +4,7 @@ local shift = keybinds:newKeybind("shift", "key.keyboard.left.shift")
 local lock_mdl = models.models.padlock.bone:setParentType("WORLD"):setVisible(false)
 
 local lift = require("libs.Bitslayn.lift")
+lift.config.enabled = true
 lift.config.maxPos = 10
 lift.config.maxVel = 10
 lift.config.whitelist = {
@@ -31,9 +32,9 @@ page:newAction():setTitle("Velocity Limit [10]"):setItem("feather")
 		lift.config.maxPos = lift.config.maxVel
 		self:setTitle(string.format("Velocity Limit [%d]", lift.config.maxVel))
 	end)
-page:newAction():setTitle("Disabled"):setItem("lever"):setOnToggle(function(enabled, self)
+page:newAction():setTitle("Enabled"):setItem("lever"):setOnToggle(function(enabled, self)
 	lift.config.enabled = enabled
-end):setToggleTitle("Enabled")
+end):setToggleTitle("Enabled"):setToggled(true)
 
 local action = page:newAction():setTitle("Player Mover [RMB to throw, MMB to lock]"):setItem("fishing_rod"):setOnToggle(function() end)
 local click = keybinds:newKeybind("move", "key.mouse.left", false)
